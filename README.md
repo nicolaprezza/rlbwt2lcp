@@ -17,7 +17,7 @@ Based on an extension (to BWTs of collections) of the suffix-tree navigation alg
 
 ### RAM usage
 
-Let r be the number of BWT runs. When "N"s are not present (alphabet = A,C,G,T,#) the tool uses **n"*"5.25 + r"*"128 bits** of RAM. If "N"s are present, the tool uses **n*5.65 + r*128 bits** of RAM.
+Let r be the number of BWT runs. When "N"s are not present (alphabet = A,C,G,T,#) the tool uses **5.25 n + 128 r bits** of RAM. If "N"s are present, the tool uses **5.65 n + 128 r bits** of RAM.
 
 ### Running time
 
