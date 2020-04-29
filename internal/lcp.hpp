@@ -28,6 +28,10 @@
 #include <stack>
 #include <algorithm>
 
+#include "sdsl/bit_vectors.hpp"; // for rrr_vector
+
+using namespace sdsl;
+
 using namespace std;
 
 template<class bwt_t, typename lcp_int_t>
@@ -45,8 +49,23 @@ public:
 
 		n = bwt->size();
 
-		LCP = vector<lcp_int_t>(n, nil);
-		LCP[0] = 0;
+		bit_vector b(n, 0); //marks with a bit set the last character of each run
+
+		uint64_t r = 1;//number of runs
+
+		for(uint64_t i=1;i<n;++i){
+			if(bwt->operator[](i) != bwt->operator[](i-1)){
+				b[i-1] = 1;
+				r++;
+			}
+		}
+
+		b[n-1] = 1;
+
+		rank_support_v<> rb(&b);
+
+		LCP = vector<lcp_int_t>(r, nil);//value of minimum LCP for each run
+		MIN = vector<uint64_t>(r);//position of a minimum LCP for each run
 
 		/*
 		 * FIRST PASS: LEAVES NAVIGATION. COMPUTE LCP VALUES INSIDE SUFFIX TREE LEAVES.
@@ -83,9 +102,7 @@ public:
 
 				for(uint64_t i = L.rn.first+1; i<L.rn.second; ++i){
 
-					assert(LCP[i]==nil);
-
-					LCP[i] = L.depth;
+					update_lcp_val<lcp_int_t>(LCP,MIN,i,L.depth,b,rb);
 
 					lcp_values++;
 					m++;
@@ -146,7 +163,7 @@ public:
 				S.pop();
 				nodes++;
 
-				update_lcp<lcp_int_t>(N,LCP,lcp_values);
+				update_lcp<lcp_int_t>(N,LCP,MIN,b,rb,lcp_values);
 
 				int t = 0;
 
@@ -185,13 +202,24 @@ public:
 
 		std::ofstream out(lcp_path);
 
-		out.write((char*)LCP.data(),LCP.size() * sizeof(lcp_int_t));
+		for(uint64_t i=0;i<LCP.size();++i){
+
+			uint64_t min = MIN[i];
+			lcp_int_t lcp = LCP[i];
+
+			out.write((char*)&min,sizeof(uint64_t));
+			out.write((char*)&lcp,sizeof(lcp_int_t));
+
+			//cout << min << ", " << lcp << endl;
+
+		}
 
 		out.close();
 
 	}
 
 	vector<lcp_int_t> LCP;
+	vector<uint64_t> MIN;
 
 private:
 

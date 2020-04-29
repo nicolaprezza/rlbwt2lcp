@@ -2,12 +2,11 @@
 
 ### Overview
 
-Input: path of a file containing the (extended) BWT of a collection of strings. Alphabet: {A,C,G,T,N,#}. The default terminator is #, but it can be changed with option -t. If the file does not contain "N", the algorithm is faster and uses slightly less RAM.
+Input: path of a file containing the (extended) BWT of a collection of strings, in plain text. Be careful to not include a newline at the end of the file. Alphabet: {A,C,G,T,N,#}. The default terminator is #, but it can be changed with option -t. If the file does not contain "N" characters, the algorithm is faster and uses slightly less RAM.
 
-Output: a file containing r pairs of 64-bits integers (i,LCP[i]), where r is the number of equal-letter runs in the input BWT and i is a position such that LCP[i] is a minimum in an interval [L,R+1] such that BWT[L,R] is an equal-letter run. If there are multiple minima in a run, we store only one (arbitrarily). Pairs (i,LCP[i]) are stored by increasing i. 
+Output: a file containing r pairs of integers (i,LCP[i]), where r is the number of equal-letter runs in the input BWT and i is a position such that LCP[i] is a minimum in an interval [L,R+1] such that BWT[L,R] is an equal-letter run.  If there are multiple minima in [L,R+1], we store only one (arbitrarily). Pairs (i,LCP[i]) are stored by increasing run number. Integer i is stored using 64 bits. Integer LCP[i] is stored using B*8 bits (B Bytes), where B = 8 by default and can be changed using option -l.
 
-Based on an extension (to BWTs of collections) of the suffix-tree navigation algorithm described in  the paper "
-
+Based on the publications:
 
 *Nicola Prezza and Giovanna Rosone, 2019. Space-Efficient Computation of the LCP Array from the Burrows-Wheeler Transform. Proceedings of the 30th Annual Symposium on Combinatorial Pattern Matching (CPM).*
 
@@ -17,7 +16,7 @@ Based on an extension (to BWTs of collections) of the suffix-tree navigation alg
 
 ### RAM usage
 
-Let r be the number of BWT runs. When "N"s are not present (alphabet = A,C,G,T,#) the tool uses **5.25 n + 128 r bits** of RAM. If "N"s are present, the tool uses **5.65 n + 128 r bits** of RAM.
+Let r be the number of BWT runs and B the number of bytes used to represent LCP values (option -l). When "N"s are not present (alphabet = A,C,G,T,#) the tool uses **5.25 n + (64+8B) r bits** of RAM. If "N"s are present, the tool uses **5.65 n + (64+8B) r bits** of RAM.
 
 ### Running time
 

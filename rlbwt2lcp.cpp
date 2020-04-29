@@ -15,16 +15,13 @@
 #include <unistd.h>
 #include "internal/dna_bwt_n.hpp"
 
-#include "sdsl/bit_vectors.hpp" // for rrr_vector
-
-using namespace sdsl;
 using namespace std;
 
 string input_bwt;
 string output_file;
 
 bool out_da = false;
-uint8_t lcp_size = 1;
+uint8_t lcp_size = 8;
 
 bool containsN = false;
 
@@ -38,7 +35,7 @@ void help(){
 	"-h          Print this help" << endl <<
 	"-i <arg>    Input BWT (REQUIRED)" << endl <<
 	"-o <arg>    Output file name (REQUIRED)" << endl <<
-	"-l <arg>    Number of Bytes used to represent LCP values. <arg>=1,2,4,8 Bytes. Default: 1." << endl <<
+	"-l <arg>    Number of Bytes used to represent LCP values. <arg>=1,2,4,8 Bytes. Default: 8." << endl <<
 	"-t          ASCII code of the terminator. Default:" << int('#') << " (#). Cannot be the code for A,C,G,T,N." << endl;
 	exit(0);
 }
@@ -87,7 +84,7 @@ int main(int argc, char** argv){
 	if(output_file.size()==0) help();
 
 	cout << "Input bwt file: " << input_bwt << endl;
-	cout << "Output LCP file: " << output_file << endl;
+	cout << "Output file: " << output_file << endl;
 
 	containsN = hasN(input_bwt);
 

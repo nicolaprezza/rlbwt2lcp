@@ -9,8 +9,10 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#include "sdsl/bit_vectors.hpp"; // for rrr_vector
 
 using namespace std;
+using namespace sdsl;
 
 typedef pair<uint64_t,uint64_t> range_t;
 
@@ -475,8 +477,33 @@ uint8_t number_of_children(pair<sa_node_n,sa_node_n> P){
 
 }
 
+
 template<typename lcp_int_t>
-void update_lcp(sa_node & x, vector<lcp_int_t> & LCP, uint64_t & lcp_values){
+void update_lcp_val(vector<lcp_int_t> & LCP,vector<uint64_t> & MIN,uint64_t i, uint64_t lcp, bit_vector & b, rank_support_v<> & rb){
+
+	uint64_t run = rb(i);
+
+	if(lcp < LCP[run]){
+		MIN[run] = i;
+		LCP[run] = lcp;
+	}
+
+	//in this case lcp has to be considered also for the previous run
+	if(i>0 && b[i-1]==1){
+
+		run--;
+		if(lcp < LCP[run]){
+			MIN[run] = i;
+			LCP[run] = lcp;
+		}
+
+	}
+
+}
+
+
+template<typename lcp_int_t>
+void update_lcp(sa_node & x, vector<lcp_int_t> & LCP,vector<uint64_t> & MIN,bit_vector & b, rank_support_v<> & rb, uint64_t & lcp_values){
 
 	assert(x.first_A >= x.first_TERM);
 	assert(x.first_C >= x.first_A);
@@ -488,30 +515,26 @@ void update_lcp(sa_node & x, vector<lcp_int_t> & LCP, uint64_t & lcp_values){
 	lcp_int_t nil = ~lcp_int_t(0);
 
 	if(has_child_TERM(x) and x.first_A != x.last){
-		assert(LCP[x.first_A]==nil);
-		LCP[x.first_A] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_A,x.depth,b,rb);
 		lcp_values++;
 	}
 	if(has_child_A(x) and x.first_C != x.last){
-		assert(LCP[x.first_C]==nil);
-		LCP[x.first_C] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_C,x.depth,b,rb);
 		lcp_values++;
 	}
 	if(has_child_C(x) and x.first_G != x.last){
-		assert(LCP[x.first_G]==nil);
-		LCP[x.first_G] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_G,x.depth,b,rb);
 		lcp_values++;
 	}
 	if(has_child_G(x) and x.first_T != x.last){
-		assert(LCP[x.first_T]==nil);
-		LCP[x.first_T] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_T,x.depth,b,rb);
 		lcp_values++;
 	}
 
 }
 
 template<typename lcp_int_t>
-void update_lcp(sa_node_n & x, vector<lcp_int_t> & LCP, uint64_t & lcp_values){
+void update_lcp(sa_node_n & x, vector<lcp_int_t> & LCP,vector<uint64_t> & MIN,bit_vector & b, rank_support_v<> & rb, uint64_t & lcp_values){
 
 	assert(x.first_A >= x.first_TERM);
 	assert(x.first_C >= x.first_A);
@@ -524,28 +547,23 @@ void update_lcp(sa_node_n & x, vector<lcp_int_t> & LCP, uint64_t & lcp_values){
 	lcp_int_t nil = ~lcp_int_t(0);
 
 	if(has_child_TERM(x) and x.first_A != x.last){
-		assert(LCP[x.first_A]==nil);
-		LCP[x.first_A] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_A,x.depth,b,rb);
 		lcp_values++;
 	}
 	if(has_child_A(x) and x.first_C != x.last){
-		assert(LCP[x.first_C]==nil);
-		LCP[x.first_C] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_C,x.depth,b,rb);
 		lcp_values++;
 	}
 	if(has_child_C(x) and x.first_G != x.last){
-		assert(LCP[x.first_G]==nil);
-		LCP[x.first_G] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_G,x.depth,b,rb);
 		lcp_values++;
 	}
 	if(has_child_G(x) and x.first_N != x.last){
-		assert(LCP[x.first_N]==nil);
-		LCP[x.first_N] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_N,x.depth,b,rb);
 		lcp_values++;
 	}
 	if(has_child_N(x) and x.first_T != x.last){
-		assert(LCP[x.first_T]==nil);
-		LCP[x.first_T] = x.depth;
+		update_lcp_val<lcp_int_t>(LCP,MIN,x.first_T,x.depth,b,rb);
 		lcp_values++;
 	}
 
