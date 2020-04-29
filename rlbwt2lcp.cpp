@@ -15,6 +15,9 @@
 #include <unistd.h>
 #include "internal/dna_bwt_n.hpp"
 
+#include "sdsl/bit_vectors.hpp" // for rrr_vector
+
+using namespace sdsl;
 using namespace std;
 
 string input_bwt;
@@ -29,14 +32,13 @@ char TERM = '#';
 
 void help(){
 
-	cout << "bwt2lcp [options]" << endl <<
+	cout << "rlbwt2lcp [options]" << endl <<
 	"Input: BWT of a collection of reads. Output: LCP array of the collection." << endl <<
 	"Options:" << endl <<
 	"-h          Print this help" << endl <<
 	"-i <arg>    Input BWT (REQUIRED)" << endl <<
 	"-o <arg>    Output file name (REQUIRED)" << endl <<
 	"-l <arg>    Number of Bytes used to represent LCP values. <arg>=1,2,4,8 Bytes. Default: 1." << endl <<
-	//"-n          Alphabet is {A,C,G,N,T," << TERM << "}. Default: alphabet is {A,C,G,T," << TERM << "}."<< endl <<
 	"-t          ASCII code of the terminator. Default:" << int('#') << " (#). Cannot be the code for A,C,G,T,N." << endl;
 	exit(0);
 }

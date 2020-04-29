@@ -12,6 +12,9 @@ project (rlbwt2lcp)
 
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/internal)
+include_directories(~/include) #SDSL headers are here
+
+LINK_DIRECTORIES(~/lib) #SDSL lib are here
 
 message("Building in ${CMAKE_BUILD_TYPE} mode")
 
@@ -22,3 +25,5 @@ set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -fstrict-aliasing -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -ggdb -Ofast -fstrict-aliasing -march=native")
 
 add_executable(rlbwt2lcp rlbwt2lcp.cpp)
+TARGET_LINK_LIBRARIES(rlbwt2lcp sdsl)
+

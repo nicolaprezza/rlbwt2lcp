@@ -21,7 +21,7 @@ Let r be the number of BWT runs. When "N"s are not present (alphabet = A,C,G,T,#
 
 ### Running time
 
-O(n), where n is the total collection(s) size. 
+O(n), where n is the total collection size. 
 
 ### Funding
 
