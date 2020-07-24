@@ -28,7 +28,7 @@
 #include <stack>
 #include <algorithm>
 
-#include "sdsl/bit_vectors.hpp"; // for rrr_vector
+#include "sdsl/bit_vectors.hpp" // for rrr_vector
 
 using namespace sdsl;
 

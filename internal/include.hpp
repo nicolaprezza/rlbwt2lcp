@@ -9,7 +9,7 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
-#include "sdsl/bit_vectors.hpp"; // for rrr_vector
+#include "sdsl/bit_vectors.hpp" // for rrr_vector
 
 using namespace std;
 using namespace sdsl;
